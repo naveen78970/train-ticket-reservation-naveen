@@ -41,9 +41,11 @@ jobs:
         with:
           name: TrainBook-WAR
           path: target/*.war
-          # Deploy to tomcat
-      - name: deploy war to tomcat
+          # SONARQUBE CODE QUALITY
+      - name: Build, Test and sonarscan
         run: |
-               curl -v -u "${{secrets.TOMCAT_USER}}:${{secrets.TOMCAT_PASSWORD}}" \
-               -T target/TrainBook-1.0.0-SNAPSHOT.war \
-               "http://${{secrets.TOMCAT_HOST}}:8080/manager/text/deploy?path=/TrainBook&update=true"
+                mvn clean sonar:sonar \
+                -Dsonar.projectKey=train.ticket \
+                -Dsonar.host.url="${{secrets.SONAR_HOST_URL}}" \
+                -Dsonar.login="{{secrets.SONAR_TOKEN}}"
+     
